@@ -1,0 +1,36 @@
+---
+# tasks file for basic-installs
+- block:
+
+  - name: Update System
+    apt:
+      update_cache: yes
+  - name: Upgrade System
+    apt:
+      upgrade: yes
+
+  when: ansible_os_family == "Debian"
+
+- block:
+
+  - name: Update System
+    yum:
+      name: '*'
+      state: latest
+
+
+  - name: Upgrade System
+    ansible.builtin.shell:
+      cmd: "sudo yum upgrade -y"
+      
+  when: ansible_os_family == "RedHat"
+
+
+
+- name: packages install
+  ansible.builtin.package:
+    name: 
+     - net-tools
+     - python3
+     - tree
+    state: present

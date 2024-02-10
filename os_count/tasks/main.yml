@@ -1,0 +1,39 @@
+---
+# tasks file for os_count
+
+- name: clean count file
+  ansible.builtin.shell:
+    cmd: "echo '' > {{ count_file }}"
+  delegate_to: localhost
+  run_once: true
+
+- name: Append ansible_os_family to a local file
+  ansible.builtin.shell:
+    cmd: "echo {{ ansible_os_family }} >> {{ count_file }}"
+  delegate_to: localhost
+
+- name: Count lines
+  ansible.builtin.shell:
+    cmd: "cat /home/ec2-user/ansible_mission/os_count/files/count_file | grep 'Debian' | wc -l"
+  register: debians_count_result
+  delegate_to: localhost
+  run_once: true
+
+- name: Display Debian's count
+  ansible.builtin.debug:
+    var: "The amout of Debian's is: {{ debians_count_result.stdout }}"
+  run_once: true
+
+- name: Count lines
+  ansible.builtin.shell:
+    cmd: "cat /home/ec2-user/ansible_mission/os_count/files/count_file | grep 'RedHat' | wc -l"
+  register: redhats_count_result
+  delegate_to: localhost
+  run_once: true
+
+
+- name: Display line count
+  ansible.builtin.debug:
+    var: "The number of RedHat's is: {{ redhats_count_result.stdout }}"
+  run_once: true
+

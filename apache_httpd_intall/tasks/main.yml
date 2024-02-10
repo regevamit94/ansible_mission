@@ -1,0 +1,17 @@
+---
+# tasks file for apache_httpd_intall
+- block:
+
+  - name: Install httpd and PHP 8.1 packages on Amazon
+    ansible.builtin.yum:
+        name: httpd
+        state: present
+  when: ansible_os_family == "RedHat"
+
+- block: 
+
+  - name: Install apache and packages on Ubuntu
+    ansible.builtin.apt:
+      name: apache2
+      state: present
+  when: ansible_os_family == "Debian"
