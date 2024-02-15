@@ -1,0 +1,7 @@
+- name: copy file from localhost to host
+  hosts: all
+  become: yes
+
+
+  roles:
+  - { role: training }

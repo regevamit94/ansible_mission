@@ -1,0 +1,41 @@
+---
+# tasks file for training
+
+- block:
+  - name: Copy file to host
+    ansible.builtin.copy:
+      src: ./1.txt
+      dest: /home/ec2-user/frommaster
+  when: ansible_os_family == "RedHat"
+
+- block:
+  - name: Copy file to host
+    ansible.builtin.copy:
+      src: ./1.txt
+      dest: /home/ubuntu/frommaster
+  when: ansible_os_family == "Debian"
+
+
+- name: Print ansible_os_family
+  ansible.builtin.debug:
+    var: ansible_os_family
+
+- name: print message 3 times
+  ansible.builtin.debug:
+    msg: "123123"
+  with_sequence: start=0 end=2
+  run_once: true
+
+- name: create text variable
+  local_action:
+    module: ansible.builtin.debug
+    msg: "This is the command"
+  register: text_var
+  delegate_to: localhost
+  run_once: true
+
+- name: print text variable
+  ansible.builtin.debug:
+    var: text_var.msg
+  run_once: true
+  delegate_to: localhost
