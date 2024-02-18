@@ -8,7 +8,6 @@
   - name: Upgrade System
     apt:
       upgrade: yes
-
   when: ansible_os_family == "Debian"
 
 - block:

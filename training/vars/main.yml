@@ -1,2 +1,4 @@
 ---
 # vars file for training
+ipv4_file: /home/ec2-user/ansible_mission/training/files/ipv4_file.txt
+gatherfacts_file: /home/ec2-user/ansible_mission/training/files/log.txt

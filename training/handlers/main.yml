@@ -1,2 +1,6 @@
 ---
 # handlers file for training
+- name: insert private ipv4 to local file
+  ansible.builtin.shell:
+    cmd: " echo Host {{ inventory_hostname }}, private IPv4 is: {{ ansible_facts['default_ipv4'].address }} >> {{ ipv4_file }} ,last rebooted: {{ last_rebooted.start }} "
+  delegate_to: localhost

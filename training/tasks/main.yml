@@ -1,5 +1,23 @@
 ---
 # tasks file for training
+- name: gather facts
+  ansible.builtin.setup:
+  register: ansiblefacts
+  
+- name: Create a file with Ansible facts
+  ansible.builtin.copy:
+    content: "{{ ansiblefacts | to_nice_json}}"
+    dest: "{{ gatherfacts_file }}"
+  delegate_to: localhost
+
+- name: Set permissions on the gather facts file
+  ansible.builtin.file:
+    path: "{{ gatherfacts_file }}"
+    mode: "0644"
+  delegate_to: localhost
+
+
+
 
 - block:
   - name: Copy file to host
@@ -16,6 +34,7 @@
   when: ansible_os_family == "Debian"
 
 
+
 - name: Print ansible_os_family
   ansible.builtin.debug:
     var: ansible_os_family
@@ -27,8 +46,7 @@
   run_once: true
 
 - name: create text variable
-  local_action:
-    module: ansible.builtin.debug
+  ansible.builtin.debug:
     msg: "This is the command"
   register: text_var
   delegate_to: localhost
@@ -39,3 +57,38 @@
     var: text_var.msg
   run_once: true
   delegate_to: localhost
+
+- name: clean private ipv4 local file
+  ansible.builtin.shell:
+    cmd: " echo  > {{ ipv4_file }}"
+  delegate_to: localhost
+
+
+- name: insert last reboot to a var
+  ansible.builtin.shell:
+    cmd: "echo  who -b"
+  register: last_rebooted
+
+
+- name: insert private ipv4 to local file
+  ansible.builtin.shell:
+    cmd: " echo Host {{ inventory_hostname }}, private IPv4 is: {{ ansible_facts['default_ipv4'].address }} >> {{ ipv4_file }} ,last rebooted: {{ last_rebooted.start }} "
+  delegate_to: localhost
+
+- name: Set permissions on the private ipv4 file
+  ansible.builtin.file:
+    path: '{{ ipv4_file }}'
+    mode: "0644"
+  delegate_to: localhost
+
+
+- name: reboot hosts
+  ansible.builtin.reboot:
+
+- name: Wait for the reboot to complete if there was a change.
+  wait_for_connection:
+    connect_timeout: 10
+    sleep: 5
+    delay: 5
+    timeout: 300
+  notify: insert private ipv4 to local file

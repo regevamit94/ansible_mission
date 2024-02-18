@@ -1,8 +1,8 @@
 [ubuntu]
-ubuntu-1 ansible_host=35.176.180.212
-ubuntu-2 ansible_host=18.169.244.18
-ubuntu-3 ansible_host=3.8.88.207
+ubuntu-1 ansible_host=35.178.170.8
+ubuntu-2 ansible_host=3.8.86.171
+ubuntu-3 ansible_host=13.40.111.24
 
 [aws]
-aws-1 ansible_host=13.42.27.129
-aws-2 ansible_host=18.130.62.171
+aws-1 ansible_host=13.40.200.132
+aws-2 ansible_host=13.40.183.231
